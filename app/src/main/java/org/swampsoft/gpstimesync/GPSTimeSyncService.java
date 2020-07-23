@@ -139,7 +139,11 @@ public class GPSTimeSyncService extends AccessibilityService {
                 @Override
                 public void onLocationChanged(Location location) {
 
-                    GPStime = location.getTime();
+                    gpsTime = location.getTime();
+                    // GPS Week Number Rollover fallout 2.0 workaround (+1024 weeks, 1024 * 7 * 24 * 60 * 60 * 1000 = 619315200000L, big thx to uri2x)
+                    if ((gpsTime > 0) & (gpsTime < 1546300800000L)) {
+                        gpsTime += 619315200000L;
+                    }
 
                     //String gpsConverted = new java.text.SimpleDateFormat("MM/dd/yy HH:mm:ss").format(new java.util.Date(GPStime));
                     gpsConverted = new java.text.SimpleDateFormat("yyyyMMdd.HHmmss").format(new java.util.Date(GPStime));
